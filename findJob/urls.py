@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from job.views import VacancyAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/v1/vacancylist/', VacancyAPIView.as_view())
 ]
