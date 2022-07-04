@@ -6,15 +6,20 @@ from django.utils.translation import gettext_lazy as _
 
 
 # Create your models here.
-class Vacancy(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    minBounty = models.IntegerField(blank=True)
-    maxBounty = models.IntegerField(blank=True)
-
 
 class Category(models.Model):
     title = models.CharField(max_length=250)
+
+    def __str__(self):
+        return self.title
+
+
+class Vacancy(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    minBounty = models.IntegerField(blank=True, null=True)
+    maxBounty = models.IntegerField(blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
 
 
 class Profile(models.Model):
@@ -24,7 +29,7 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     type = models.CharField(max_length=1, choices=UserTypes.choices)
-    location = models.CharField(max_length=30, blank=True)
+    location = models.CharField(max_length=30, blank=True, null=True)
     birth_date = models.DateField(null=True, blank=True)
     vacancies = models.ForeignKey(Vacancy, on_delete=models.CASCADE, null=True)
 
