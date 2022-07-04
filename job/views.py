@@ -1,9 +1,7 @@
-from django.shortcuts import render
 from rest_framework import generics, viewsets
 from rest_framework.decorators import action
-from .models import Vacancy, Category, User, Resume
+from .models import Vacancy, Category, Resume, User
 from .serializers import VacancySerializer
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.pagination import PageNumberPagination
@@ -18,6 +16,7 @@ class VacancyPaginator(PageNumberPagination):
     max_page_size = 100
 
 
+# Filtering by named args
 class VacancyAPIListByCategory(generics.ListAPIView):
     serializer_class = VacancySerializer
 
@@ -65,10 +64,14 @@ class VacancyViewSet(viewsets.ModelViewSet):
         cats = Category.objects.all()
         return Response({'categories': [c.title for c in cats]})
 
-    @action(methods=['get'], detail=True)
+    @action(methods=['post'], detail=True)
     def resume(self, request, pk):
         user = self.request.user
+        # user = User.objects.get(pk=1)
+
         vacancy = Vacancy.objects.get(pk=pk)
+        if Resume.objects.filter(user=user, vacancy=vacancy).exists():
+            return Response({'resume': 'exists'})
         resume = Resume(vacancy=vacancy, user=user)
         resume.save()
         return Response({'vacancy': model_to_dict(vacancy), 'user': model_to_dict(user)})

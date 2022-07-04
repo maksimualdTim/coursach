@@ -24,8 +24,8 @@ router.register(r'vacancy', VacancyViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/auth/', include('rest_framework.urls')),
-    re_path('api/v1/(?P<category>.+)/$', VacancyAPIListByCategory.as_view()),
     path('api/v1/', include(router.urls)),
     path('api/v1/filter/', VacancyAPIListFilter.as_view()),
-    path('api/v1/my-vacancies/', VacancyAPICurrentUserList.as_view())
+    path('api/v1/my-vacancies/', VacancyAPICurrentUserList.as_view()),
+    re_path('^api/v1/(?P<category>.+)/$', VacancyAPIListByCategory.as_view()),
 ]
