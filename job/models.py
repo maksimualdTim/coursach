@@ -20,26 +20,10 @@ class Vacancy(models.Model):
     minBounty = models.IntegerField(blank=True, null=True)
     maxBounty = models.IntegerField(blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
+    owner = models.ForeignKey(User, verbose_name='Владелец', on_delete=models.CASCADE)
 
 
-class Profile(models.Model):
-    class UserTypes(models.TextChoices):
-        EMPLOYER = 'e', _('Employer')
-        CANDIDATE = 'c', _('Candidate')
-
+class Resume(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    type = models.CharField(max_length=1, choices=UserTypes.choices)
-    location = models.CharField(max_length=30, blank=True, null=True)
-    birth_date = models.DateField(null=True, blank=True)
-    vacancies = models.ForeignKey(Vacancy, on_delete=models.CASCADE, null=True)
+    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
 
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
