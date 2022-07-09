@@ -27,5 +27,8 @@ urlpatterns = [
     path('api/v1/', include(router.urls)),
     path('api/v1/filter/', VacancyAPIListFilter.as_view()),
     path('api/v1/my-vacancies/', VacancyAPICurrentUserList.as_view()),
+
+    path('api/v1/auth/', include('djoser.urls')),  # new
+    re_path(r'^auth/', include('djoser.urls.authtoken')),  # new
     re_path('^api/v1/(?P<category>.+)/$', VacancyAPIListByCategory.as_view()),
 ]

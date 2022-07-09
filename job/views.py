@@ -32,12 +32,12 @@ class VacancyAPIListFilter(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Vacancy.objects.all()
+
         min = self.request.query_params.get('min-bounty')
         max = self.request.query_params.get('max-bounty')
         q = self.request.query_params.get('q')
         # category = self.request.query_params.get('categories')
-
-        if q is not None:
+        if q is not None and isinstance(max, int) and max is not None and isinstance(min, int) and min is not None:
             queryset = queryset.filter(Q(title__icontains=q) & Q(maxBounty__lte=max) & Q(minBounty__gte=min))
 
         return queryset
